@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import * as Web3 from 'web3';
+// import Web3 = require('web3');
+import * as Web3 from 'web3/src';
 
 declare var window: any;
 declare var navigator: any;
@@ -20,9 +21,10 @@ export class AppComponent {
   ABI: any = [{ 'constant': false, 'inputs': [{ 'name': 'idx', 'type': 'uint256' }], 'name': 'getLocationHistory', 'outputs': [{ 'name': 'delegate', 'type': 'address' }, { 'name': 'longitude', 'type': 'uint128' }, { 'name': 'latitude', 'type': 'uint128' }, { 'name': 'name', 'type': 'bytes32' }], 'payable': false, 'stateMutability': 'nonpayable', 'type': 'function' }, { 'constant': true, 'inputs': [], 'name': 'recentLocation', 'outputs': [{ 'name': 'delegate', 'type': 'address' }, { 'name': 'longitude', 'type': 'uint128' }, { 'name': 'latitude', 'type': 'uint128' }, { 'name': 'name', 'type': 'bytes32' }], 'payable': false, 'stateMutability': 'view', 'type': 'function' }, { 'constant': true, 'inputs': [{ 'name': 'longitude', 'type': 'uint128' }, { 'name': 'latitude', 'type': 'uint128' }, { 'name': 'name', 'type': 'bytes32' }], 'name': 'saveLocation', 'outputs': [], 'payable': false, 'stateMutability': 'view', 'type': 'function' }, { 'constant': false, 'inputs': [], 'name': 'getLastLocation', 'outputs': [{ 'components': [{ 'name': 'delegate', 'type': 'address' }, { 'name': 'longitude', 'type': 'uint128' }, { 'name': 'latitude', 'type': 'uint128' }, { 'name': 'name', 'type': 'bytes32' }], 'name': 'recentLocation', 'type': 'tuple' }], 'payable': false, 'stateMutability': 'nonpayable', 'type': 'function' }, { 'constant': true, 'inputs': [{ 'name': '', 'type': 'uint256' }], 'name': 'locations', 'outputs': [{ 'name': 'delegate', 'type': 'address' }, { 'name': 'longitude', 'type': 'uint128' }, { 'name': 'latitude', 'type': 'uint128' }, { 'name': 'name', 'type': 'bytes32' }], 'payable': false, 'stateMutability': 'view', 'type': 'function' }, { 'constant': true, 'inputs': [], 'name': 'item', 'outputs': [{ 'name': 'id', 'type': 'bytes32' }, { 'name': 'name', 'type': 'bytes32' }], 'payable': false, 'stateMutability': 'view', 'type': 'function' }, { 'inputs': [{ 'name': 'id', 'type': 'bytes32' }, { 'name': 'name', 'type': 'bytes32' }], 'payable': false, 'stateMutability': 'nonpayable', 'type': 'constructor' }];;
 
   constructor(private route: ActivatedRoute) { }
-
   @HostListener('window:load')
   windowLoaded() {
+  console.log('Web3')
+  console.log(Web3)
     this.checkAndInstantiateWeb3();
     this.getLocation();
   }
@@ -62,7 +64,7 @@ export class AppComponent {
   private setLocation(): void {
     navigator.geolocation.getCurrentPosition((position) => {
 
-      let result = this.MyContract.methods.saveLocation(
+      this.MyContract.methods.saveLocation(
         position.coords.longitude, position.coords.latitude, 'test'
       );
 
