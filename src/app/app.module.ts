@@ -2,8 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ClarityModule } from '@clr/angular';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
-import { NgQRCodeReaderModule } from 'ng2-qrcode-reader';
+import { QRCodeModule } from 'angularx-qrcode';
 import '@webcomponents/custom-elements';
 import '@clr/icons';
 
@@ -25,8 +24,7 @@ const routes: Routes = [
       // { enableTracing: true },
     ),
     ClarityModule.forRoot(),
-    NgxQRCodeModule,
-    NgQRCodeReaderModule,
+    QRCodeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

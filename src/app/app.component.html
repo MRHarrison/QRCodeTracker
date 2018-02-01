@@ -15,10 +15,7 @@
   <div class="content-container">
     <div class="content-area">
       <div class="marketing">
-        <ngx-qrcode
-          qrc-element-type="url"
-          [qrc-value] = "dappUrl"
-          qrc-version = "10"></ngx-qrcode>
+        <qrcode [qrdata]="dappUrl" [size]="200" [level]="'M'" class='qrcode'></qrcode>
         <h1>QR Chain</h1>
         <small>Proof of Concept</small>
         <h3>Track your products efficiently and gain customers trust with the blockchain</h3>
@@ -98,11 +95,7 @@
           </div>
         </div>
         <div class="col-lg-3 offset-xs-1">
-          <ngx-qrcode
-            qrc-element-type="url"
-            [qrc-value] = "dappUrl"
-            qrc-version = "10"></ngx-qrcode>
-          </div>
+        </div>
       </div>
     </div>
   </div>
