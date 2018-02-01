@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('barcode-dapp App', () => {
+describe('qrcode-dapp App', () => {
   let page: AppPage;
 
   beforeEach(() => {

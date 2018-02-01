@@ -1,20 +1,112 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="main-container">
+  <header class="header header-4">
+    <div class="branding">
+      <a href="..." class="nav-link">
+        <clr-icon shape="vm-bug"></clr-icon>
+        <span class="title">QR Chain</span>
+      </a>
+    </div>
+    <div class="header-nav">
+      <a href="./#poc" class="active nav-link nav-text">Proof Of Concept</a>
+      <!-- <a href="javascript://" class="nav-link nav-text">Contact</a> -->
+    </div>
+  </header>
+  <div class="content-container">
+    <div class="content-area">
+      <div class="marketing">
+        <ngx-qrcode
+          qrc-element-type="url"
+          [qrc-value] = "dappUrl"
+          qrc-version = "10"></ngx-qrcode>
+        <h1>QR Chain</h1>
+        <small>Proof of Concept</small>
+        <h3>Track your products efficiently and gain customers trust with the blockchain</h3>
+      </div>
+      <div class="row flex-items-xs-center callouts">
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+          <a href="..." class="card clickable">
+            <div class="card-block">
+              <div class="card-media-block">
+                <clr-icon shape="plus" size="72" class="card-media-image"></clr-icon>
+                <div class="card-media-description">
+                  <span class="card-media-title">
+                    <h3>
+                      Create QR Code
+                    </h3>
+                  </span>
+                </div>
+              </div>
+              <p class="card-text">
+                QR Code is created with items' id and name and stored on the blockchain.
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="card-block">
+              <div class="card-media-block">
+                <div class="card-media-image">
+                  <clr-icon shape="map-marker" ></clr-icon>
+                </div>
+                <span class="card-media-title">
+                  <h3>
+                    Track Your Items
+                  </h3>
+                </span>
+              </div>
+              <p class="card-text">
+                QR Code scanner will get items' location and store it on the blockchain.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+          <a href="..." class="card clickable">
+            <div class="card-block">
+              <div class="card-media-block">
+                <clr-icon shape="piggy-bank" class="card-media-image"></clr-icon>
+                <span class="card-media-title">
+                  <h3>
+                    Efficient, Easy, Secure
+                  </h3>
+                </span>
+              </div>
+              <p class="card-text">
+                You or your customers can access that information quickly and efficiently, no infrastructure or maintenance costs.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row flex-items-xs-center poc">
+        <div class="col-lg-12 title"><h1>Proof Of Concept</h1></div>
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+                Steps
+            </div>
+            <div class="card-block">
+              <ol class="list">
+                <li>Install a dapp browser.</li>
+                <li>Use Your Phone's Camera To Scan QR Code</li>
+                <li>Allow location authorization on your phone</li>
+                <li>Location will be saved to blockchain</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 offset-xs-1">
+          <ngx-qrcode
+            qrc-element-type="url"
+            [qrc-value] = "dappUrl"
+            qrc-version = "10"></ngx-qrcode>
+          </div>
+      </div>
+      <ng2-qrcode-reader (result)="render($event)" [qrr-show]="showQRCode" [qrr-value]="value" [qrr-type]="elementType"></ng2-qrcode-reader>
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<footer>
+</footer>
