@@ -98,7 +98,7 @@
           </div>
         </div>
         <div class="col-lg-2 offset-xs-1 qrcode-phone">
-          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'H'" class='qrcode'></qrcode>
         </div>
       </div>
       <div id="results" class="row flex-items-xs-center results">
@@ -142,7 +142,6 @@
 
 <!-- Scanner -->
 <div class="scanner-wrapper" [ngClass]="{hide: !showScanner}">
-  <button (click)="close()" class="close">X</button>
   <div class="row flex-items-xs-center">
     <div class="col-lg-6">
       <div class="card">
@@ -171,7 +170,7 @@
           <h1>I'm an Apple. Scan Me</h1>
         </div>
         <div class="card-block">
-          <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+          <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'H'" class='qrcode'></qrcode>
         </div>
         <div class="card-footer">
           <button (click)="closeApple()" class="btn btn-link">Close</button>
