@@ -51,11 +51,18 @@ export class AppComponent {
 
     // Scroll to fragments
     this.route.fragment.subscribe(fragment => {
-      const element = document.querySelector("#" + fragment);
 
-      if (element) {
-        element.scrollIntoView(element);
+      if (fragment) {
+        // Scroll to fragment
+        const el = document.querySelector('#' + fragment);
+        if (el) {
+          el.scrollIntoView();
+        }
+      } else {
+        // Scroll to top if no fragment
+        window.scrollTo(0, 0);
       }
+
     });
 
   }
