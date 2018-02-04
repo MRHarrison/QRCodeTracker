@@ -8,8 +8,8 @@
       </a>
     </div>
     <div class="header-nav">
-      <a href="./#poc" class="active nav-link nav-text">Proof Of Concept</a>
-      <a href="javascript://" class="nav-link nav-text">Contact</a>
+      <a routerLink="/" fragment="poc" class="nav-link nav-text">Demo</a>
+      <a routerLink="/" fragment="limitations" class="nav-link nav-text">Limitations</a>
     </div>
   </header>
   <div class="content-container">
@@ -171,7 +171,10 @@
           <h1>I'm an Apple. Scan Me</h1>
         </div>
         <div class="card-block">
-          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+          <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+        </div>
+        <div class="card-footer">
+          <button (click)="closeApple()" class="btn btn-link">Close</button>
         </div>
       </div>
     </div>

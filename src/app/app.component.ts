@@ -14,8 +14,10 @@ declare var navigator: any;
 })
 export class AppComponent {
   title = 'app';
-  dappUrl: string = 'http://barcode.felix.exchange';
-  trackableItem: string = 'http://barcode.felix.exchange?acion=trackMeOnBlockchain';
+  dappUrl: string = 'https://barcode.felix.exchange';
+  itemId: string = 'trackMeOnBlockchain';
+  trackableItem: string = `https://barcode.felix.exchange?action=${this.itemId}`;
+  saveLocationItem: string = `https://barcode.felix.exchange?action=saveLocation`;
   web3: any;
   contractHash: string = '0x3b8a60616bde6f6d251e807695900f31ab12ce1a';
   MyContract: any;
@@ -35,7 +37,7 @@ export class AppComponent {
 
     this.route.queryParams.subscribe(params => {
 
-      if (params && params.action === 'trackMeOnBlockchain') {
+      if (params && params.action === this.itemId) {
         this.loadApple();
       }
 
@@ -46,6 +48,16 @@ export class AppComponent {
   @HostListener('window:load')
   windowLoaded() {
     this.checkAndInstantiateWeb3();
+
+    // Scroll to fragments
+    this.route.fragment.subscribe(fragment => {
+      const element = document.querySelector("#" + fragment);
+
+      if (element) {
+        element.scrollIntoView(element);
+      }
+    });
+
   }
 
   getLocationHistory() {
@@ -89,10 +101,6 @@ export class AppComponent {
     });
   }
 
-  private handleLocations(): void {
-    this.showLocations = true;
-    this.gettingLocations = true;
-  }
 
   simulate(): void {
     this.close();
@@ -104,9 +112,19 @@ export class AppComponent {
     this.toggleScanner();
   }
 
+  closeApple() {
+    this.showApple = false;
+  }
+
   handleQrCodeResult(event): void {
     console.log('event');
     console.log(event);
+  }
+
+
+  private handleLocations(): void {
+    this.showLocations = true;
+    this.gettingLocations = true;
   }
 
   private checkAndInstantiateWeb3 = () => {
@@ -127,13 +145,13 @@ export class AppComponent {
   private getLocation(): void {
     let query = this.route.snapshot.queryParams;
 
-    if (query.action && query.action === 'setLocation') {
-      this.setLocation();
+    if (query.action && query.action === 'saveLocation') {
+      this.saveLocation();
     }
 
   }
 
-  private setLocation(): void {
+  private saveLocation(): void {
     navigator.geolocation.getCurrentPosition((position) => {
 
       this.MyContract.methods.saveLocation(
@@ -156,6 +174,5 @@ export class AppComponent {
   private loadApple() {
     this.showApple = true;
   }
-
 
 }
