@@ -3,11 +3,8 @@ import { ClarityModule } from '@clr/angular';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angularx-qrcode';
-import '@webcomponents/custom-elements';
-import '@clr/icons';
 
 import { AppComponent } from './app.component';
-
 
 const routes: Routes = [
 { path: '',  component: AppComponent },

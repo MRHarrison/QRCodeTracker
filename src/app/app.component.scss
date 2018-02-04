@@ -1,0 +1,86 @@
+@import '../styles';
+
+.marketing {
+    text-align: center;
+    margin-top: 10px !important;
+    margin-bottom: 10px;
+
+    .qrcode {
+        width: 200px;
+        margin: 0 auto;
+        display: inherit !important;
+    }
+    h1 {
+        margin-bottom: 0;
+        font-size: 48px;
+    }
+    h3 {
+        margin-top: 5px;
+    }
+}
+.callouts {
+    margin-top: 50px;
+}
+.card {
+    h3 {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+}
+.poc {
+    margin-top: 150px;
+
+    .title {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .qrcode-phone {
+        margin-top: 50px;
+    }
+}
+.scanner-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $light-transparent;
+
+    .card {
+        margin-top: 10vh;
+        text-align: center;
+
+        h1 {
+            margin-top: 0;
+        }
+    }
+    .close {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+    }
+}
+.scanner-wrapper.hide {
+    display: none;
+}
+.results {
+    margin-top: 100px;
+    .card-block {
+        min-height: 200px;
+
+        .spinner-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+    }
+}
+.limitations {
+    margin-top: 200px;
+}
+footer {
+    float: left;
+    position: relative;
+    min-height: 500px;
+    background-color: $background;
+    margin-top: 100px;
+}

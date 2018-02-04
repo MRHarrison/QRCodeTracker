@@ -1,37 +1,3 @@
 /* You can add global styles to this file, and also import other style files */
-.marketing {
-    .qrcode {
-        img {
-            width: 200px;
-            margin: 0 auto;
-        }
-    }
-    text-align: center;
-    margin-top: 10px !important;
-    margin-bottom: 10px;
-
-    h1 {
-        margin-bottom: 0;
-        font-size: 48px;
-    }
-    h3 {
-        margin-top: 5px;
-    }
-}
-.callouts {
-    margin-top: 50px;
-}
-.card {
-    h3 {
-        margin-left: 10px;
-        margin-top: 10px;
-    }
-}
-.poc {
-    margin-top: 150px;
-
-    .title {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-}
+$background: #006a91;
+$light-transparent: rgba( 255, 255, 255, .95);

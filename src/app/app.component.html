@@ -9,7 +9,7 @@
     </div>
     <div class="header-nav">
       <a href="./#poc" class="active nav-link nav-text">Proof Of Concept</a>
-      <!-- <a href="javascript://" class="nav-link nav-text">Contact</a> -->
+      <a href="javascript://" class="nav-link nav-text">Contact</a>
     </div>
   </header>
   <div class="content-container">
@@ -22,7 +22,7 @@
       </div>
       <div class="row flex-items-xs-center callouts">
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-          <a href="..." class="card clickable">
+          <div class="card">
             <div class="card-block">
               <div class="card-media-block">
                 <clr-icon shape="plus" size="72" class="card-media-image"></clr-icon>
@@ -38,7 +38,7 @@
                 QR Code is created with items' id and name and stored on the blockchain.
               </p>
             </div>
-          </a>
+          </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-          <a href="..." class="card clickable">
+          <div class="card">
             <div class="card-block">
               <div class="card-media-block">
                 <clr-icon shape="piggy-bank" class="card-media-image"></clr-icon>
@@ -74,11 +74,11 @@
                 You or your customers can access that information quickly and efficiently, no infrastructure or maintenance costs.
               </p>
             </div>
-          </a>
+          </div>
         </div>
       </div>
-      <div class="row flex-items-xs-center poc">
-        <div class="col-lg-12 title"><h1>Proof Of Concept</h1></div>
+      <div id="poc" class="row flex-items-xs-center poc">
+        <div class="col-lg-12 title"><h1>Proof Of Concept Demo</h1></div>
         <div class="col-lg-4">
           <div class="card">
             <div class="card-header">
@@ -86,19 +86,95 @@
             </div>
             <div class="card-block">
               <ol class="list">
-                <li>Install a dapp browser.</li>
-                <li>Use Your Phone's Camera To Scan QR Code</li>
-                <li>Allow location authorization on your phone</li>
+                <li>You need to have the <a href="https://metamask.io/" target="_blank">metamask chrome extension installed</a>, and on ROPSTEN Test Net. Get free test eth <a href="https://faucet.metamask.io/" target="_blank">here</a>.
+                </li>
+                <li>Use Your Phone's Camera To Scan QR Code to the right</li>
+                <li>Imagine your phone is the item that you are tracking.</li>
+                <li>Now click this <button class="btn btn-primary" (click)="scanPhone()">scan button</button> and scan the QR Code on your phone.</li>
+                <li>Allow permission to get location, so it can be recorded to the blockchain.</li>
                 <li>Location will be saved to blockchain</li>
               </ol>
             </div>
           </div>
         </div>
-        <div class="col-lg-3 offset-xs-1">
+        <div class="col-lg-2 offset-xs-1 qrcode-phone">
+          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+        </div>
+      </div>
+      <div id="results" class="row flex-items-xs-center results">
+        <div *ngIf="showLocations" class="col-lg-4 card">
+          <div class="card-header">Location History</div>
+          <div class="card-block">
+            <div *ngIf="gettingLocations" class="spinner-container">
+              <span class="spinner spinner-inline">
+                  Loading...
+              </span>
+              <span>
+                  Saving Your Location
+              </span>
+            </div>
+            <div *ngIf="!gettingLocations">
+              Show Locations
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="limitations" class="row flex-items-xs-center limitations">
+        <div class="col-lg-6 card">
+          <div class="card-header">Limitations</div>
+          <div class="card-block">
+              <ol>
+                <li>Transactions on the ethereum blockchain are expensive, but as the technology progresses the prices will come down.</li>
+                <li>The example flow above to use the computers camera and not the phone camera is awkward, because there is no blockchain browser with camera access.  The other option was to build an ios/android scanner, but that was going to far outside of this demo. </li>
+              </ol>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <footer>
+          </footer>
         </div>
       </div>
     </div>
   </div>
 </div>
-<footer>
-</footer>
+
+<!-- Scanner -->
+<div class="scanner-wrapper" [ngClass]="{hide: !showScanner}">
+  <button (click)="close()" class="close">X</button>
+  <div class="row flex-items-xs-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h1>Scan QR Code On Your Phone</h1>
+        </div>
+        <div class="card-block">
+          <video id="preview" width="500"></video>
+        </div>
+        <div class="card-footer">
+          <button (click)="simulate()" class="btn btn-link">Show Me Without Scanning</button>
+          <button (click)="close()" class="btn btn-link">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Scanner -->
+
+<!-- Apple -->
+<div *ngIf="showApple" class="apple-wrapper">
+  <div class="row flex-items-xs-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h1>I'm an Apple. Scan Me</h1>
+        </div>
+        <div class="card-block">
+          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Apple -->
