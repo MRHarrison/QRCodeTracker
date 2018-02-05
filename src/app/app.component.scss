@@ -2,7 +2,7 @@
 
 .marketing {
     text-align: center;
-    margin-top: 10px !important;
+    margin-top: 30px !important;
     margin-bottom: 10px;
 
     .qrcode {
@@ -28,12 +28,17 @@
     }
 }
 .poc {
-    margin-top: 150px;
+    margin-top: 250px;
 
     .title {
-        text-align: center;
-        margin-bottom: 50px;
+        // margin-bottom: 10px;
     }
+    .strengths {
+        margin-top: 20px;
+    }
+}
+.demo {
+    margin-top: 100px;
     .qrcode-phone {
         margin-top: 50px;
     }
@@ -82,7 +87,7 @@
     }
 }
 .results {
-    margin-top: 100px;
+    padding-top: 100px;
     .card-block {
         min-height: 200px;
 
@@ -93,7 +98,7 @@
     }
 }
 .limitations {
-    margin-top: 200px;
+    margin-top: 400px;
 }
 footer {
     float: left;

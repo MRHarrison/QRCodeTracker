@@ -13,24 +13,33 @@ declare var navigator: any;
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
-  dappUrl: string = 'https://barcode.felix.exchange';
+  // Dapp Urls
+  dappUrl: string = 'http://www.qrcodechain.com';
   itemId: string = 'trackMeOnBlockchain';
-  trackableItem: string = `https://barcode.felix.exchange?action=${this.itemId}`;
-  saveLocationItem: string = `https://barcode.felix.exchange?action=saveLocation`;
+  trackableItem: string = `${this.dappUrl}/?action=${this.itemId}`;
+  saveLocationItem: string = `${this.dappUrl}/?action=saveLocation`;
+
+
   web3: any;
-  contractHash: string = '0x3b8a60616bde6f6d251e807695900f31ab12ce1a';
+  options: any = {
+        'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03',
+        'gas': '44000'
+      };
+  contractHash: string = '0x09d10c8e1a92a5adeb91dd432a5ab17319b4acde';
   MyContract: any;
   contract: any;
-  ABI: any = [{"constant":true,"inputs":[{"name":"idx","type":"uint256"}],"name":"getLocationHistory","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"uint128"},{"name":"latitude","type":"uint128"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"recentLocation","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"uint128"},{"name":"latitude","type":"uint128"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"longitude","type":"uint128"},{"name":"latitude","type":"uint128"},{"name":"name","type":"bytes32"}],"name":"saveLocation","outputs":[],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"getLastLocation","outputs":[{"components":[{"name":"delegate","type":"address"},{"name":"longitude","type":"uint128"},{"name":"latitude","type":"uint128"},{"name":"name","type":"bytes32"}],"name":"recentLocation","type":"tuple"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"locations","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"uint128"},{"name":"latitude","type":"uint128"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"item","outputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
+  ABI: any = [{"constant":true,"inputs":[{"name":"idx","type":"uint256"}],"name":"getLocationHistory","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocationLength","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"name","type":"bytes32"}],"name":"saveLocation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"locations","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"item","outputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
 
   scanner: Instascan.Scanner;
   camera: Instascan.Camera;
   showScanner: boolean = false;
+  demoMessage: string = '';
 
   showLocations: boolean = false;
   gettingLocations: boolean = false;
+  history: Array<any> = [];
 
+  name: string = 'Apple';
   showApple: boolean = false;
 
   constructor(private route: ActivatedRoute, private zone: NgZone) {
@@ -62,19 +71,30 @@ export class AppComponent {
         // Scroll to top if no fragment
         window.scrollTo(0, 0);
       }
-
     });
 
   }
 
   getLocationHistory() {
-    this.MyContract.methods
-      .getLocationHistory(0).send({
-      'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03',
-      'gas': '44000'
-    }).then((result) => {
-      this.MyContract.methods.getLocationHistory(0).call()
-        .then(hello => {console.log('hello', hello)});
+    this.showLocations = true;
+    document.querySelector('#results').scrollIntoView();
+    this.demoMessage = 'Getting previous locations...';
+    this.gettingLocations = true;
+
+    this.MyContract.methods.getLocationLength().call().then(length => {
+      length = Number(length);
+      console.log('Location length: ', length);
+      let last = false;
+
+      for (let index = 0; index < length; index++) {
+        if ((index + 1) === length) {
+          last = true;
+        }
+
+        this.MyContract.methods.getLocationHistory(index).call()
+          .then(history => this.handleHistory(history, last));
+      }
+      return length;
     });
   }
 
@@ -82,7 +102,10 @@ export class AppComponent {
     // Open Scanner
     this.toggleScanner();
     // Init Scanner
-    this.scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+    this.scanner = new Instascan.Scanner({
+      video: document.getElementById('preview'),
+      mirror: true
+    });
     // Turn on Camera
     Instascan.Camera.getCameras().then(cameras => {
       if (cameras.length > 0) {
@@ -91,19 +114,24 @@ export class AppComponent {
       } else {
         console.error('No cameras found.');
       }
+      //
       // Wait for successful scan
       this.scanner.addListener('scan', content => {
-        if (content === this.trackableItem) {
+        console.log('content')
+        console.log(content)
+        if (content === this.saveLocationItem) {
           this.scanner.stop(this.camera);
-
+          //
+          // Get and save locations
           this.zone.run(() => {
             this.toggleScanner();
-            this.getLocation();
+            this.getLocationHistory();
           });
         }
       });
 
     }).catch(function (e) {
+      this.close();
       console.error(e);
     });
   }
@@ -111,7 +139,7 @@ export class AppComponent {
 
   simulate(): void {
     this.close();
-    this.handleLocations();
+    this.getLocationHistory();
   }
 
   close(): void {
@@ -121,17 +149,6 @@ export class AppComponent {
 
   closeApple() {
     this.showApple = false;
-  }
-
-  handleQrCodeResult(event): void {
-    console.log('event');
-    console.log(event);
-  }
-
-
-  private handleLocations(): void {
-    this.showLocations = true;
-    this.gettingLocations = true;
   }
 
   private checkAndInstantiateWeb3 = () => {
@@ -145,36 +162,57 @@ export class AppComponent {
         new Web3.providers.HttpProvider('http://localhost:8545')
       );
     }
-
     this.MyContract = new this.web3.eth.Contract(this.ABI, this.contractHash);
   }
 
-  private getLocation(): void {
-    let query = this.route.snapshot.queryParams;
+  private getAndSaveLocation() {
 
-    if (query.action && query.action === 'saveLocation') {
-      this.saveLocation();
-    }
-
-  }
-
-  private saveLocation(): void {
+    //
+    // Get current location
     navigator.geolocation.getCurrentPosition((position) => {
-
-      this.MyContract.methods.saveLocation(
-        position.coords.longitude, position.coords.latitude, window.web3.fromAscii("test")
-      ).send({'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03'}
-      ).then((result) => {
-        console.log('saveLocation')
-        console.log(result)
-      });
-
-      this.getLocationHistory();
+      console.log('Location:', position);
+      // this.demoMessage = 'Saving Item Location...';
+      let locData = (window.web3.fromAscii(position.coords.longitude.toString()),
+              window.web3.fromAscii(position.coords.latitude.toString()),
+              window.web3.fromAscii(this.name));
+      //
+      // Save to blockchain
+      // this.MyContract.methods
+      //   .saveLocation(locData)
+      //   .send(this.options)
+      //   .then(location => this.handleLocationSave(location, locData));
 
     });
   }
 
-  private toggleScanner() {
+  private handleLocationSave(location: any, data: any): void {
+     console.log('Saved Location Receipt: ', location);
+
+     this.history.push({
+       name: this.name,
+       latitude: data[1],
+       longitude: data[0],
+       delegate: this.options['from'],
+       timestamp: Date()
+     });
+  }
+
+  private handleHistory(historyItem: any, last: boolean): void {
+    console.log('last')
+    console.log(last)
+    if (last) {
+      this.gettingLocations = false;
+    }
+    historyItem.name = window.web3.toAscii(historyItem.name);
+    historyItem.latitude = window.web3.toAscii(historyItem.latitude);
+    historyItem.longitude = window.web3.toAscii(historyItem.longitude);
+    this.zone.run(() => {
+      this.history.push(historyItem);
+    })
+    console.log(this.history)
+  }
+
+  private toggleScanner(): void {
     this.showScanner = !this.showScanner;
   }
 

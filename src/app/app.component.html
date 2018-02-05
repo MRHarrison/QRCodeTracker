@@ -1,4 +1,4 @@
-<!--The content below is only a placeholder and can be replaced.-->
+The content below is only a placeholder and can be replaced.-->
 <div class="main-container">
   <header class="header header-4">
     <div class="branding">
@@ -8,7 +8,8 @@
       </a>
     </div>
     <div class="header-nav">
-      <a routerLink="/" fragment="poc" class="nav-link nav-text">Demo</a>
+      <a routerLink="/" fragment="about" class="nav-link nav-text">About</a>
+      <a routerLink="/" fragment="demo" class="nav-link nav-text">Demo</a>
       <a routerLink="/" fragment="limitations" class="nav-link nav-text">Limitations</a>
     </div>
   </header>
@@ -77,59 +78,95 @@
           </div>
         </div>
       </div>
-      <div id="poc" class="row flex-items-xs-center poc">
-        <div class="col-lg-12 title"><h1>Proof Of Concept Demo</h1></div>
+      <!-- About -->
+      <div id="about" class="row flex-items-xs-center poc">
+        <div class="col-lg-8 title"><h1>About</h1></div>
+        <div class="col-lg-8">
+          <div class="card">
+<!--             <div class="card-header">
+                Purpose
+            </div> -->
+            <div class="card-block">
+                This proof of concept will be demonstrating decentralization, open access and trust technologies for the tracking of an apple. This site is hosted via <a href="https://www.ipfs.com" target="_blank">IPFS</a> which decentralizes hosting for our SPA (single page application) across many different nodes, like bittorrent for hosting.  We are also using ethereum blockchain technologies for contract transactions and as our data store.
+                <ul class="list-unstyled strengths">
+                  <li><strong>Decentralization</strong> Anyone can scan the apple and get info of where it has been.</li>
+                  <li><strong>Open Access/Transparnecy</strong> Anyone can scan the apple and get info of where it has been. Anyone will be able to access all of the apple's, no need to create api's for your data. Consumers, you, your company and whoever has access</li>
+                  <li><strong>Trust</strong> Using a blockchain contract ensures the data is validated by a third-party.  Having open access data also ensures trust with you and your consumers</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End of About -->
+
+      <!-- Demo -->
+      <div id="demo" class="row flex-items-xs-center demo">
         <div class="col-lg-4">
           <div class="card">
             <div class="card-header">
-                Steps
+                Steps for demo:
             </div>
             <div class="card-block">
               <ol class="list">
                 <li>You need to have the <a href="https://metamask.io/" target="_blank">metamask chrome extension installed</a>, and on ROPSTEN Test Net. Get free test eth <a href="https://faucet.metamask.io/" target="_blank">here</a>.
                 </li>
-                <li>Use Your Phone's Camera To Scan QR Code to the right</li>
-                <li>Imagine your phone is the item that you are tracking.</li>
-                <li>Now click this <button class="btn btn-primary" (click)="scanPhone()">scan button</button> and scan the QR Code on your phone.</li>
-                <li>Allow permission to get location, so it can be recorded to the blockchain.</li>
-                <li>Location will be saved to blockchain</li>
+                <li>Use Your Phone's Camera To Scan QR Code to the right. (Up-to-date iOS or Android camera app should work)</li>
+                <li>A website should open up with a QR Code on your phone.</li>
+                <li>Imagine your phone is an apple that you just bought and you want to see where that apple has been.</li>
+                <li>Scan your phone by clicking this button <button class="btn btn-primary" (click)="scanPhone()">QR Code Scanner</button>. You will need to give us access to your computer's camera.</li>
               </ol>
             </div>
           </div>
         </div>
-        <div class="col-lg-2 offset-xs-1 qrcode-phone">
-          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'H'" class='qrcode'></qrcode>
+        <div class="col-lg-3 offset-xs-1 qrcode-phone">
+          <qrcode [qrdata]="trackableItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
+          <small>Point your phone's camera at me!</small>
         </div>
       </div>
+
       <div id="results" class="row flex-items-xs-center results">
-        <div *ngIf="showLocations" class="col-lg-4 card">
-          <div class="card-header">Location History</div>
+        <div *ngIf="showLocations" class="col-lg-6 card">
+          <div class="card-header">Location History of Apple</div>
           <div class="card-block">
+            <div>
+
+              <ul class="list-unstyled" *ngFor="let hist of history;">
+                <li><strong>Scanner Name:</strong> {{ hist.name }}</li>
+                <li><strong>Scanner Address:</strong> {{ hist.delegate }}</li>
+                <li><strong>Latitude:</strong> {{ hist.latitude }}</li>
+                <li><strong>Longitude:</strong> {{ hist.longitude }}</li>
+              </ul>
+            </div>
             <div *ngIf="gettingLocations" class="spinner-container">
               <span class="spinner spinner-inline">
                   Loading...
               </span>
               <span>
-                  Saving Your Location
+                  {{ demoMessage || 'Loading...' }}
               </span>
             </div>
-            <div *ngIf="!gettingLocations">
-              Show Locations
-            </div>
+          </div>
+          <div class="card-footer">
+            <button (click)="closeApple()" class="btn btn-link">Save My Location To Blockchain</button>
           </div>
         </div>
       </div>
+      <!-- End of Demo -->
+
+      <!-- Limitations -->
       <div id="limitations" class="row flex-items-xs-center limitations">
         <div class="col-lg-6 card">
           <div class="card-header">Limitations</div>
           <div class="card-block">
               <ol>
                 <li>Transactions on the ethereum blockchain are expensive, but as the technology progresses the prices will come down.</li>
-                <li>The example flow above to use the computers camera and not the phone camera is awkward, because there is no blockchain browser with camera access.  The other option was to build an ios/android scanner, but that was going to far outside of this demo. </li>
+                <li><strong>Mobile Camera</strong> - The example flow above to use the computers camera and not the phone camera is awkward, because there is no blockchain browser with camera access.  The other option was to build an ios/android scanner, but that was going to far outside of this demo. </li>
+                <li><strong>HTTPS</strong>In order to use the camera and location, our IPFS app must have a secure origin.</li>
               </ol>
           </div>
         </div>
       </div>
+      <!-- End of Limitations -->
       <div class="row">
         <div class="col-lg-12">
           <footer>
@@ -167,10 +204,10 @@
     <div class="col-lg-6">
       <div class="card">
         <div class="card-header">
-          <h1>I'm an Apple. Scan Me</h1>
+          <h1>I'm an Orange. Scan Me</h1>
         </div>
         <div class="card-block">
-          <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'H'" class='qrcode'></qrcode>
+          <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>
         </div>
         <div class="card-footer">
           <button (click)="closeApple()" class="btn btn-link">Close</button>
