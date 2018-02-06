@@ -1,12 +1,5 @@
 # QRcode Tacking Dapp
-#### (Proof of concept)
-
-## Technologies
-1. IPFS
-2. Web3
-3. Solidity
-4. Metamask
-5. QR Code
+[QRCodeChain.com](https://www.qrcodechain.com) is a proof of concept Dapp for tracking physical things using the blockchain.
 
 ## Tasks
 - [x] Store and save data to ethereum blockchain
@@ -17,15 +10,26 @@
 - [ ] Dockerize Dapp
 - [ ] Setup Angular Universal for SEO
 
-## Development server
+## Technologies
+1. [Angular](https://angular.io/)
+2. [Clarity](https://vmware.github.io/clarity/)
+3. [IPFS](https://ipfs.io/)
+4. [Web3](https://github.com/ethereum/web3.js/)
+5. [Solidity](https://github.com/ethereum/solidity)
+6. [Remix IDE](https://remix.ethereum.org)
+7. [Metamask](https://metamask.io/)
+8. [QR Code](http://www.qrcode.com/en/index.html)
+
+
+## Angular Development server
 
 Run `npm run serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Angular Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+## Angular Build
 
 Run `npm run build` to build the project.
 
@@ -37,7 +41,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+## Angular Help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
