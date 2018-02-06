@@ -178,14 +178,6 @@
                   </agm-info-window>
 
                 </agm-marker>
-
-                <agm-polyline
-                    [geodesic]="true"
-                    [strokeColor]="'#FF0000'"
-                    [strokeOpacity]="1.0"
-                    [strokeWeight]="2">
-                </agm-polyline>
-
               </agm-map>
             </div>
             <div *ngIf="gettingLocations" class="spinner-container">
@@ -198,8 +190,8 @@
             </div>
           </div>
           <div class="card-footer">
-            <button (click)="saveLocation()" class="btn" [clrLoading]="savingLocation">
-              Save My Location To Blockchain
+            <button (click)="saveLocation()" class="btn btn-primary" [clrLoading]="savingLocation">
+              <clr-icon shape="download"></clr-icon> Save My Location To Blockchain
             </button>
           </div>
         </div>
@@ -214,7 +206,7 @@
             <div class="card-block">
 
                 <ul class="list strengths">
-                  <li><strong>Open Access/Transparency</strong> Consumers, you, your company and whoever wants access can get access the tracking of your products. Anyone can scan the apple and get info of where it has been.  This kind of transparency will be trust to your brand.</li>
+                  <li><strong>Open Access/Transparency</strong> - Consumers, you, your company and whoever wants access can get access the tracking of your products. Anyone can scan your product and get info of where it has been.  This kind of transparency will bring trust to your brand.</li>
                   <li><strong>Decentralized Infrastructure</strong> Information will be duplicated over many nodes, delivering both resiliency and data validation. You no longer need to support infrastructure, you only pay for what you use.</li>
                 </ul>
             </div>
@@ -231,7 +223,7 @@
             <div class="card-block">
                 <ul class="list">
                   <li><strong>Transactions</strong> on the blockchain are still expensive and slow, but as the technology progresses the prices will come down.  Ethereum is also planning on having sharding available later this year to support thousands of transactions per second.</li>
-                  <li><strong>Wallet/Blockchain</strong> Must have a wallet connected to scan and save your location and UI.  Most people have no idea of how to connect to the blockchain, so apps need to be made and hopefully big players like Google and Apple will connect users through Chrome and Safari</li>
+                  <li><strong>Wallet/Blockchain</strong> Must have a wallet connected to scan and save your location and UI.  Most people have no idea how to connect to the blockchain with a wallet, so the blockchain ecosystem has quite a ways to go before the UX improves</li>
                   <li><strong>Mobile Camera</strong> - The example flow above to use the computer's camera and not the phone camera is awkward, I implemented it this way because there is no blockchain browser with camera access.  Just another indicator of how new this ecosystem is. </li>
                 </ul>
             </div>
@@ -269,8 +261,8 @@
           <video id="preview" width="500"></video>
         </div>
         <div class="card-footer">
-          <button (click)="simulate()" class="btn">Show Me Without Scanning</button>
-          <button (click)="close()" class="btn">Cancel</button>
+          <button (click)="simulate()" class="btn btn-sm"><clr-icon shape="eye"></clr-icon> Show Me Without Scanning</button>
+          <button (click)="close()" class="btn btn-sm">Cancel</button>
         </div>
       </div>
     </div>

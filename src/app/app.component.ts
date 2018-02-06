@@ -59,8 +59,8 @@ export class AppComponent {
   lng: number = -97;
 
   appleLocations: Array<any> = [
-    // {name: 'Orchard', lat: '47.2211', lng: '-122.5614'},
-    // {name: 'Distributor', lat: '41.491660', lng: '-93.667396'},
+    {name: 'Orchard', lat: '47.2211', lng: '-122.5614'},
+    {name: 'Distributor', lat: '41.491660', lng: '-93.667396'},
     {name: 'Store', lat: '25.7719730', lng: '-80.1890720'}
   ];
   savingLocation: boolean = false;
@@ -80,7 +80,6 @@ export class AppComponent {
   @HostListener('window:load')
   windowLoaded() {
     this.checkAndInstantiateWeb3();
-    this.initLoadContract();
     // Scroll to fragments
     this.route.fragment.subscribe(fragment => {
 
@@ -140,8 +139,6 @@ export class AppComponent {
       //
       // Wait for successful scan
       this.scanner.addListener('scan', content => {
-        console.log('content')
-        console.log(content)
         if (content === this.saveLocationItem) {
           this.scanner.stop(this.camera);
           //
