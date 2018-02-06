@@ -10,6 +10,7 @@
     <div class="header-nav">
       <a routerLink="/" fragment="about" class="nav-link nav-text">About</a>
       <a routerLink="/" fragment="demo" class="nav-link nav-text">Demo</a>
+      <a routerLink="/" fragment="strengths" class="nav-link nav-text">Strengths</a>
       <a routerLink="/" fragment="limitations" class="nav-link nav-text">Limitations</a>
     </div>
   </header>
@@ -46,7 +47,7 @@
             <div class="card-block">
               <div class="card-media-block">
                 <div class="card-media-image">
-                  <clr-icon shape="map-marker" ></clr-icon>
+                  <clr-icon size="60" shape="map-marker" ></clr-icon>
                 </div>
                 <span class="card-media-title">
                   <h3>
@@ -64,7 +65,7 @@
           <div class="card">
             <div class="card-block">
               <div class="card-media-block">
-                <clr-icon shape="piggy-bank" class="card-media-image"></clr-icon>
+                <clr-icon size="64" shape="piggy-bank" class="card-media-image"></clr-icon>
                 <span class="card-media-title">
                   <h3>
                     Efficient, Easy, Secure
@@ -84,12 +85,7 @@
           <h1>About</h1>
           <div class="card">
             <div class="card-block">
-                This proof of concept will be using blockchain and ipfs decentralization to show to ensure transaction trust and infrastructure resiliency. This site is hosted via <a href="https://www.ipfs.com" target="_blank">IPFS</a> which decentralizes hosting for our this website across many different nodes, like bittorrent for hosting, the site will live forever in the network.  We are using ethereum because of it's <a href="https://github.com/ethereum/solidity">solidity</a> interface, strong community and strong future.
-                <ul class="list strengths">
-                  <li><strong>Decentralization</strong> Anyone can scan the apple and get info of where it has been.</li>
-                  <li><strong>Open Access/Transparnecy</strong> Anyone can scan the apple and get info of where it has been. Anyone will be able to access all of the apple's, no need to create api's for your data. Consumers, you, your company and whoever has access</li>
-                  <li><strong>Trust</strong> Using a blockchain contract ensures the data is validated by a third-party.  Having open access data also ensures trust with you and your consumers</li>
-                </ul>
+                This proof of concept will be using blockchain and <a href="https://www.ipfs.com" target="_blank">IPFS</a>, better known as a Dapp, to demonstrate the benefits and limitations of decentralization and blockchain contracts when tracking items. This web application is hosted via IPFS and the contracts and data store is leveraging <a href="https://github.com/ethereum/solidity" target="_blank">Solidity</a> and the <a href="https://www.ethereum.org/" target="_blank">Ethereum blockchain</a>.  In short IPFS is like bittorrent for websites and Ethereum is an immutable database with contract execution. We are using ethereum because of it's <a href="https://github.com/ethereum/solidity">solidity</a> interface, strong community and strong future.
             </div>
           </div>
         </div>
@@ -99,13 +95,14 @@
       <!-- Demo -->
       <div id="demo" class="row flex-items-xs-center demo">
         <div class="col-lg-5">
-          <h1>Demo</h1>
+          <h1>Demo - Tracking an apple</h1>
           <div class="card">
             <div class="card-header">
                 Steps
             </div>
             <div class="card-block">
               <ol class="list">
+                <li>Please use the Chrome browser, this has only been tested on chrome.</li>
                 <li>First, you need to connect to the blockchain by installing the <a href="https://metamask.io/" target="_blank">metamask chrome extension installed</a>, and use ROPSTEN Test Net. Get free test eth <a href="https://faucet.metamask.io/" target="_blank">here</a>.
                 </li>
                 <li>Use Your Phone's Camera To Scan QR Code to the right. (Up-to-date iOS or Android camera app should work)</li>
@@ -115,8 +112,23 @@
               </ol>
             </div>
             <div class="card-footer">
-              <button class="btn btn-primary" (click)="scanPhone()">
-                Scan Phone
+              <div *ngIf="!connectedToProvider" class="alert alert-warning alert-sm">
+                  <div class="alert-items">
+                      <div class="alert-item static">
+                          <div class="alert-icon-wrapper">
+                              <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                          </div>
+                          <div class="alert-text">
+                              You need to install metamask or use an blockchain browser like brave.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <button class="btn btn-primary"
+                      (click)="scanPhone()"
+                      [disabled]="!connectedToProvider">
+
+                <clr-icon shape="camera"></clr-icon> Scan Phone
               </button>
             </div>
           </div>
@@ -133,14 +145,48 @@
         <div *ngIf="showLocations" class="col-lg-8 card">
           <div class="card-header">Location History of Apple</div>
           <div class="card-block">
+            <div *ngIf="saveError" class="alert alert-warning alert-sm">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <div class="alert-text">
+                            {{ saveErrorMessage }}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div>
 
-              <ul class="list-unstyled" *ngFor="let hist of history;">
-                <li><strong>Scanner Name:</strong> {{ hist.name }}</li>
-                <li><strong>Scanner Address:</strong> {{ hist.delegate }}</li>
-                <li><strong>Latitude:</strong> {{ hist.latitude }}</li>
-                <li><strong>Longitude:</strong> {{ hist.longitude }}</li>
-              </ul>
+              <agm-map
+                [latitude]="lat"
+                [longitude]="lng"
+                [zoom]="zoom"
+                [disableDefaultUI]="false"
+                [zoomControl]="true">
+
+                <agm-marker
+                    *ngFor="let m of markers; let i = index"
+                    [latitude]="m.lat"
+                    [longitude]="m.lng"
+                    [label]="m.label"
+                    [markerDraggable]="m.draggable">
+
+                  <agm-info-window>
+                    <strong>{{ m.label }} @ {{ m.lat }} {{ m.lng }}</strong>
+                  </agm-info-window>
+
+                </agm-marker>
+
+                <agm-polyline
+                    [geodesic]="true"
+                    [strokeColor]="'#FF0000'"
+                    [strokeOpacity]="1.0"
+                    [strokeWeight]="2">
+                </agm-polyline>
+
+              </agm-map>
             </div>
             <div *ngIf="gettingLocations" class="spinner-container">
               <span class="spinner spinner-inline">
@@ -152,11 +198,30 @@
             </div>
           </div>
           <div class="card-footer">
-            <button (click)="saveLocation()" class="btn">Save My Location To Blockchain</button>
+            <button (click)="saveLocation()" class="btn" [clrLoading]="savingLocation">
+              Save My Location To Blockchain
+            </button>
           </div>
         </div>
       </div>
       <!-- End of Demo -->
+
+      <!-- Strengths -->
+      <div id="strengths" class="row flex-items-xs-center limitations">
+        <div class="col-lg-8">
+          <h1>Strengths</h1>
+          <div class="card">
+            <div class="card-block">
+
+                <ul class="list strengths">
+                  <li><strong>Open Access/Transparency</strong> Consumers, you, your company and whoever wants access can get access the tracking of your products. Anyone can scan the apple and get info of where it has been.  This kind of transparency will be trust to your brand.</li>
+                  <li><strong>Decentralized Infrastructure</strong> Information will be duplicated over many nodes, delivering both resiliency and data validation. You no longer need to support infrastructure, you only pay for what you use.</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End of Strengths -->
 
       <!-- Limitations -->
       <div id="limitations" class="row flex-items-xs-center limitations">
@@ -164,25 +229,33 @@
           <h1>Limitations</h1>
           <div class="card">
             <div class="card-block">
-                <ol>
-                  <li><strong>Transactions</strong> on the blockchain are still expensive, but as the technology progresses the prices will come down.</li>
-                  <li><strong>Mobile Camera</strong> - The example flow above to use the computers camera and not the phone camera is awkward, because there is no blockchain browser with camera access.  The other option was to build an ios/android scanner, but that was going to far outside of this demo. </li>
-                  <li><strong>HTTPS</strong>In order to use the camera and location, our IPFS app must have a secure origin.</li>
-                </ol>
+                <ul class="list">
+                  <li><strong>Transactions</strong> on the blockchain are still expensive and slow, but as the technology progresses the prices will come down.  Ethereum is also planning on having sharding available later this year to support thousands of transactions per second.</li>
+                  <li><strong>Wallet/Blockchain</strong> Must have a wallet connected to scan and save your location and UI.  Most people have no idea of how to connect to the blockchain, so apps need to be made and hopefully big players like Google and Apple will connect users through Chrome and Safari</li>
+                  <li><strong>Mobile Camera</strong> - The example flow above to use the computer's camera and not the phone camera is awkward, I implemented it this way because there is no blockchain browser with camera access.  Just another indicator of how new this ecosystem is. </li>
+                </ul>
             </div>
           </div>
         </div>
       </div>
       <!-- End of Limitations -->
-      <div class="row">
-        <div class="col-lg-12">
-          <footer>
-          </footer>
-        </div>
-      </div>
     </div>
   </div>
 </div>
+<footer>
+  <div class="wrapper">
+    <div class="footer-nav">
+      <a routerLink="/" fragment="about" class="nav-link nav-text">About</a>
+      <a routerLink="/" fragment="demo" class="nav-link nav-text">Demo</a>
+      <a routerLink="/" fragment="strengths" class="nav-link nav-text">Strengths</a>
+      <a routerLink="/" fragment="limitations" class="nav-link nav-text">Limitations</a>
+    </div>
+    <a routerLink="/" class="logo">
+      <clr-icon shape="vm-bug" size="20"></clr-icon>
+      <span class="title">QR Chain</span>
+    </a>
+  </div>
+</footer>
 
 <!-- Scanner -->
 <div class="scanner-wrapper" [ngClass]="{hide: !showScanner}">
@@ -211,7 +284,8 @@
     <div class="col-lg-6">
       <div class="card">
         <div class="card-header">
-          <h1>I'm an Orange. Scan Me</h1>
+          <h1>I'm an Apple.</h1>
+          <p>Scan Me and find out where I have been.</p>
         </div>
         <div class="card-block">
           <qrcode [qrdata]="saveLocationItem" [size]="200" [level]="'M'" class='qrcode'></qrcode>

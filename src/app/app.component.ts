@@ -7,6 +7,14 @@ import * as Instascan from 'instascan';
 declare var window: any;
 declare var navigator: any;
 
+// just an interface for type safety.
+interface marker {
+  lat: number;
+  lng: number;
+  label?: string;
+  draggable: boolean;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,16 +27,17 @@ export class AppComponent {
   trackableItem: string = `${this.dappUrl}/?action=${this.itemId}`;
   saveLocationItem: string = `${this.dappUrl}/?action=saveLocation`;
 
-
   web3: any;
   options: any = {
-        'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03',
-        'gas': '44000'
-      };
-  contractHash: string = '0x09d10c8e1a92a5adeb91dd432a5ab17319b4acde';
+    'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03',
+    'gas': '4400000'
+  };
+
+  contractHash: string = '0x0723d00561dba0c13d65a0a593b6f0d5a6f26f31';
   MyContract: any;
   contract: any;
   ABI: any = [{"constant":true,"inputs":[{"name":"idx","type":"uint256"}],"name":"getLocationHistory","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocationLength","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"name","type":"bytes32"}],"name":"saveLocation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"locations","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"item","outputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
+  connectedToProvider: boolean = false;
 
   scanner: Instascan.Scanner;
   camera: Instascan.Camera;
@@ -39,25 +48,39 @@ export class AppComponent {
   gettingLocations: boolean = false;
   history: Array<any> = [];
 
-  name: string = 'Apple';
+  name: string = 'Consumer';
   showApple: boolean = false;
+
+  markers: marker[] = [];
+  // google maps zoom level
+  zoom: number = 3;
+  // initial center position for the map
+  lat: number = 40;
+  lng: number = -97;
+
+  appleLocations: Array<any> = [
+    // {name: 'Orchard', lat: '47.2211', lng: '-122.5614'},
+    // {name: 'Distributor', lat: '41.491660', lng: '-93.667396'},
+    {name: 'Store', lat: '25.7719730', lng: '-80.1890720'}
+  ];
+  savingLocation: boolean = false;
+  saveError: boolean = false;
+  saveErrorMessage: string = '';
+
 
   constructor(private route: ActivatedRoute, private zone: NgZone) {
 
     this.route.queryParams.subscribe(params => {
-
       if (params && params.action === this.itemId) {
         this.loadApple();
       }
-
     });
-
   }
 
   @HostListener('window:load')
   windowLoaded() {
     this.checkAndInstantiateWeb3();
-
+    this.initLoadContract();
     // Scroll to fragments
     this.route.fragment.subscribe(fragment => {
 
@@ -136,6 +159,29 @@ export class AppComponent {
     });
   }
 
+  saveLocation(): void {
+    console.log('saving location');
+    this.savingLocation = true;
+    //
+    // Get current location
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log('Location:', position);
+      // this.demoMessage = 'Saving Item Location...';
+      let locData = [
+        window.web3.fromAscii(position.coords.longitude.toString()),
+        window.web3.fromAscii(position.coords.latitude.toString()),
+        window.web3.fromAscii(this.name)
+      ];
+      //
+      // Save to blockchain
+      this.MyContract.methods
+        .saveLocation(locData[0], locData[1], locData[2])
+        .send(this.options)
+        .then(location => this.handleLocationSave(location, locData))
+        .catch(error => this.handleSaveError(error));
+
+    });
+  }
 
   simulate(): void {
     this.close();
@@ -156,6 +202,13 @@ export class AppComponent {
       console.warn('Using web3 detected from external source.');
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
+      // Set current users eth wallet address
+      this.web3.eth.getAccounts().then(accounts => {
+        this.options['from'] = accounts[0];
+      });
+
+      this.connectedToProvider = true;
+
     } else {
       console.warn(`No web3 detected. Falling back to http://localhost:8545.`);
       this.web3 = new Web3(
@@ -165,51 +218,50 @@ export class AppComponent {
     this.MyContract = new this.web3.eth.Contract(this.ABI, this.contractHash);
   }
 
-  private getAndSaveLocation() {
-
-    //
-    // Get current location
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log('Location:', position);
-      // this.demoMessage = 'Saving Item Location...';
-      let locData = (window.web3.fromAscii(position.coords.longitude.toString()),
-              window.web3.fromAscii(position.coords.latitude.toString()),
-              window.web3.fromAscii(this.name));
-      //
-      // Save to blockchain
-      // this.MyContract.methods
-      //   .saveLocation(locData)
-      //   .send(this.options)
-      //   .then(location => this.handleLocationSave(location, locData));
-
-    });
-  }
-
   private handleLocationSave(location: any, data: any): void {
-     console.log('Saved Location Receipt: ', location);
 
-     this.history.push({
-       name: this.name,
-       latitude: data[1],
-       longitude: data[0],
-       delegate: this.options['from'],
-       timestamp: Date()
-     });
+    this.zone.run(() => {
+      console.log('Saved Location Receipt: ', location);
+      this.savingLocation = false;
+
+      this.markers.push({
+        label: window.web3.toAscii(data[2]),
+        lat: parseFloat(window.web3.toAscii((data[1]))),
+        lng: parseFloat(window.web3.toAscii((data[0]))),
+        draggable: false
+      });
+
+       this.history.push({
+         name: window.web3.toAscii(data[2]),
+         latitude: window.web3.toAscii(data[1]),
+         longitude: window.web3.toAscii(data[0]),
+         delegate: this.options['from']
+       });
+    });
+
   }
 
   private handleHistory(historyItem: any, last: boolean): void {
-    console.log('last')
-    console.log(last)
     if (last) {
       this.gettingLocations = false;
     }
+
     historyItem.name = window.web3.toAscii(historyItem.name);
     historyItem.latitude = window.web3.toAscii(historyItem.latitude);
     historyItem.longitude = window.web3.toAscii(historyItem.longitude);
+
     this.zone.run(() => {
+
       this.history.push(historyItem);
-    })
-    console.log(this.history)
+
+       this.markers.push({
+         label: historyItem.name,
+         lat: parseFloat(historyItem.latitude),
+         lng: parseFloat(historyItem.longitude),
+         draggable: false
+       });
+
+    });
   }
 
   private toggleScanner(): void {
@@ -218,6 +270,29 @@ export class AppComponent {
 
   private loadApple() {
     this.showApple = true;
+  }
+
+  private handleSaveError(message: any): void {
+    this.zone.run(() => {
+      this.savingLocation = false;
+      this.saveError = true;
+      this.saveErrorMessage = message;
+    });
+  }
+
+  private initLoadContract(): void {
+    this.appleLocations.forEach((item) => {
+      this.MyContract.methods
+        .saveLocation(
+          window.web3.fromAscii(item.lng),
+          window.web3.fromAscii(item.lat),
+          window.web3.fromAscii(item.name)
+        )
+        .send(this.options)
+        .then(location => console.log(location))
+        .catch(error => console.log(error));
+
+    });
   }
 
 }

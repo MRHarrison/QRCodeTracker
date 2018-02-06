@@ -6,6 +6,7 @@
 - [x] Host site on IPFS
 - [x] Host site on HTTPs
 - [x] Create and scan QR Codes
+- [x] Add google map for tracking
 - [ ] Setup e2e tests
 - [ ] Dockerize Dapp
 - [ ] Setup Angular Universal for SEO

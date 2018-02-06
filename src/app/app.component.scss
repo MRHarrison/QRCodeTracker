@@ -28,7 +28,7 @@
     }
 }
 .poc {
-    margin-top: 250px;
+    margin-top: 200px;
 
     .title {
         // margin-bottom: 10px;
@@ -98,14 +98,37 @@
             text-align: center;
         }
     }
+    agm-map {
+      height: 300px;
+    }
 }
 .limitations {
-    margin-top: 200px;
+    margin-top: 150px;
+    margin-bottom: 200px;
 }
 footer {
-    float: left;
     position: relative;
-    min-height: 500px;
+    float: left;
+    width: 100%;
+    min-height: 100px;
     background-color: $background;
-    margin-top: 100px;
+    text-align: center;
+    .wrapper {
+        margin-top: 15px;
+
+        a {
+            color: #fff;
+            font-size: 14px;
+        }
+        .footer-nav {
+            margin-bottom: 20px;
+            .nav-link {
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+        }
+        .logo {
+            margin-top: 20px;
+        }
+    }
 }
