@@ -1,4 +1,4 @@
-# QRcode Tacking Dapp
+# QRcode Tracking Dapp
 [QRCodeChain.com](https://www.qrcodechain.com) is a proof of concept Dapp for tracking physical things using the blockchain.
 
 ## Tasks
@@ -6,10 +6,12 @@
 - [x] Host site on IPFS
 - [x] Host site on HTTPs
 - [x] Create and scan QR Codes
-- [x] Add google map for tracking
+- [x] Add google map to view tracking
+- [ ] Switch to etherjs or use trufflejs to automate contract creation
 - [ ] Setup e2e tests
 - [ ] Dockerize Dapp
 - [ ] Setup Angular Universal for SEO
+
 
 ## Technologies
 1. [Angular](https://angular.io/)
