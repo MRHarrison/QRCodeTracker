@@ -35,9 +35,9 @@ export class AppComponent {
   };
 
   // Prod Contract
-  // contractHash: string = '0x0723d00561dba0c13d65a0a593b6f0d5a6f26f31';
+  contractHash: string = '0x0723d00561dba0c13d65a0a593b6f0d5a6f26f31';
   // Dev Contract
-  contractHash: string = '0xf2b0d6876dc62ff0342601c080b00bc576d0bee3';
+  // contractHash: string = '0xf2b0d6876dc62ff0342601c080b00bc576d0bee3';
 
   MyContract: any;
   contract: any;
