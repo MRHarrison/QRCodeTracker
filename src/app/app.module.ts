@@ -1,10 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ClarityModule } from '@clr/angular';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { ClarityModule } from '@clr/angular';
 import { QRCodeModule } from 'angularx-qrcode';
-import { AppComponent } from './app.component';
 import { AgmCoreModule } from '@agm/core';
+
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
 { path: '',  component: AppComponent },
@@ -16,6 +19,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     RouterModule.forRoot(
       routes,
       // { enableTracing: true },

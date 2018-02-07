@@ -1,4 +1,4 @@
-import { Component, HostListener, NgZone } from '@angular/core';
+import { Component, HostListener, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as Web3 from 'web3/src';
 import * as Instascan from 'instascan';
@@ -21,19 +21,24 @@ interface marker {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('nameInput') nameInput: ElementRef;
+
   // Dapp Urls
   dappUrl: string = 'http://www.qrcodechain.com';
   itemId: string = 'trackMeOnBlockchain';
   trackableItem: string = `${this.dappUrl}/?action=${this.itemId}`;
   saveLocationItem: string = `${this.dappUrl}/?action=saveLocation`;
-
   web3: any;
   options: any = {
     'from': '0x902D578B7E7866FaE71b3AB0354C9606631bCe03',
     'gas': '4400000'
   };
 
-  contractHash: string = '0x0723d00561dba0c13d65a0a593b6f0d5a6f26f31';
+  // Prod Contract
+  // contractHash: string = '0x0723d00561dba0c13d65a0a593b6f0d5a6f26f31';
+  // Dev Contract
+  contractHash: string = '0xf2b0d6876dc62ff0342601c080b00bc576d0bee3';
+
   MyContract: any;
   contract: any;
   ABI: any = [{"constant":true,"inputs":[{"name":"idx","type":"uint256"}],"name":"getLocationHistory","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLocationLength","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"name","type":"bytes32"}],"name":"saveLocation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"locations","outputs":[{"name":"delegate","type":"address"},{"name":"longitude","type":"bytes32"},{"name":"latitude","type":"bytes32"},{"name":"timestamp","type":"uint256"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"item","outputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
@@ -102,6 +107,10 @@ export class AppComponent {
     document.querySelector('#results').scrollIntoView();
     this.demoMessage = 'Getting previous locations...';
     this.gettingLocations = true;
+
+    setTimeout(() => {
+      this.nameInput.nativeElement.focus();
+    }, 200);
 
     this.MyContract.methods.getLocationLength().call().then(length => {
       length = Number(length);

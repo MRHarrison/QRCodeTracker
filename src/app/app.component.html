@@ -143,8 +143,8 @@
       </div>
 
       <div id="results" class="row flex-items-xs-center results">
-        <div *ngIf="showLocations" class="col-lg-8 card">
-          <div class="card-header">Location History of Apple from Blockchain</div>
+        <div [hidden]="!showLocations" class="col-lg-8 card">
+          <div class="card-header">Location history of apple from blockchain</div>
           <div class="card-block">
             <div *ngIf="saveError" class="alert alert-warning alert-sm">
                 <div class="alert-items">
@@ -158,8 +158,7 @@
                     </div>
                 </div>
             </div>
-            <div>
-
+            <div *ngIf="showLocations">
               <agm-map
                 [latitude]="lat"
                 [longitude]="lng"
@@ -191,7 +190,12 @@
             </div>
           </div>
           <div class="card-footer">
-            <button (click)="saveLocation()" class="btn btn-primary" [clrLoading]="savingLocation">
+            <input [(ngModel)]="name"
+                   #nameInput
+                   type="text"
+                   (keyup.enter)="saveLocation()"
+                   [disabled]="savingLocation">
+            <button (click)="saveLocation()" class="btn" [clrLoading]="savingLocation" [disabled]="savingLocation">
               <clr-icon shape="download"></clr-icon> Save My Location To Blockchain
             </button>
           </div>
