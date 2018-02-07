@@ -37,7 +37,7 @@
                 </div>
               </div>
               <p class="card-text">
-                QR Code is created with items' id and name and stored on the blockchain.
+                QR Code is created with items id and name and stored on the blockchain.
               </p>
             </div>
           </div>
@@ -85,7 +85,7 @@
           <h1>About</h1>
           <div class="card">
             <div class="card-block">
-                This proof of concept will be using blockchain and <a href="https://www.ipfs.com" target="_blank">IPFS</a>, better known as a Dapp, to demonstrate the benefits and limitations of decentralization and blockchain contracts when tracking physical items. This web application is hosted via IPFS and the contracts and data store leverages <a href="https://github.com/ethereum/solidity" target="_blank">Solidity</a> and the <a href="https://www.ethereum.org/" target="_blank">Ethereum blockchain</a>.  In short, IPFS is like bittorrent for websites and Ethereum is an immutable database with contract execution. We are using ethereum because of it's <a href="https://github.com/ethereum/solidity">solidity</a> interface, strong community and strong future.
+                This proof of concept will be using the ethereum blockchain and <a href="https://www.ipfs.com" target="_blank">IPFS</a>, better known as a Dapp, to demonstrate the benefits and limitations of decentralization and blockchain contracts when tracking physical items. This web application is hosted via IPFS and the contracts and data store leverages <a href="https://github.com/ethereum/solidity" target="_blank">Solidity</a> and the <a href="https://www.ethereum.org/" target="_blank">Ethereum blockchain</a>.  IPFS is decentralized hosting, much like bittorrent, and Ethereum is an immutable database with contract execution. We are using ethereum because of it's <a href="https://github.com/ethereum/solidity">solidity</a> interface, strong community and strong future.
             </div>
           </div>
         </div>
@@ -102,9 +102,10 @@
             </div>
             <div class="card-block">
               <ol class="list">
-                <li>Please use the Chrome browser, this has only been tested on chrome.</li>
-                <li>First, you need to connect to the blockchain by installing the <a href="https://metamask.io/" target="_blank">metamask chrome extension installed</a>, and use ROPSTEN Test Net. Get free test eth <a href="https://faucet.metamask.io/" target="_blank">here</a>.
+                <li>Please use a Chrome or Firefox browser.</li>
+                <li>First, you need to connect to the blockchain by installing the <a href="https://metamask.io/" target="_blank">metamask extension</a>, sign in, and switch to the ROPSTEN Test Net. Get free test eth <a href="https://faucet.metamask.io/" target="_blank">here</a>.
                 </li>
+                <li>Reload page to ensure everything loads correctly</li>
                 <li>Use Your Phone's Camera To Scan QR Code to the right. (Up-to-date iOS or Android camera app should work)</li>
                 <li>A website should open up with a QR Code on your phone.</li>
                 <li>Imagine your phone is an apple that you just bought and you want to see where that apple has been.</li>
@@ -119,7 +120,7 @@
                               <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                           </div>
                           <div class="alert-text">
-                              You need to install metamask or use an blockchain browser like brave.
+                              You need to install metamask.
                           </div>
                       </div>
                   </div>
@@ -143,7 +144,7 @@
 
       <div id="results" class="row flex-items-xs-center results">
         <div *ngIf="showLocations" class="col-lg-8 card">
-          <div class="card-header">Location History of Apple</div>
+          <div class="card-header">Location History of Apple from Blockchain</div>
           <div class="card-block">
             <div *ngIf="saveError" class="alert alert-warning alert-sm">
                 <div class="alert-items">
@@ -223,9 +224,9 @@
           <div class="card">
             <div class="card-block">
                 <ul class="list">
-                  <li><strong>Transactions</strong> on the blockchain are still expensive and slow, but as the technology progresses the prices will come down.  Ethereum is also planning on having sharding available later this year to support thousands of transactions per second.</li>
+                  <li><strong>Transactions</strong> on the blockchain are still expensive and slow, but as the technology progresses the prices will come down.  Ethereum has planned to implement sharding by the end of this year that will support thousands of transactions per second.</li>
                   <li><strong>Wallet/Blockchain</strong> - Most people have no idea how to connect to the blockchain with a wallet, so the blockchain app ecosystem has quite a ways to go before the usability improves for the general public.</li>
-                  <li><strong>Mobile Camera</strong> - The example flow above to use the computer's camera and not the phone camera is awkward, I implemented it this way because there is no blockchain browser with camera access.  Just another indicator of how new this ecosystem is.</li>
+                  <li><strong>QR Phone Scanner and Wallet are not available</strong> - The previous demo to use the computer camera was awkward, I implemented it this way because there is no blockchain/wallet browser with camera access, thus can't scan the qr code.  Just another indicator of how new this ecosystem is.</li>
                 </ul>
             </div>
           </div>
@@ -262,7 +263,7 @@
           <video id="preview" width="500"></video>
         </div>
         <div class="card-footer">
-          <button (click)="simulate()" class="btn btn-sm"><clr-icon shape="eye"></clr-icon> Show Me Without Scanning</button>
+          <button (click)="simulate()" class="btn btn-sm"><clr-icon shape="eye"></clr-icon> Continue Without Scanning</button>
           <button (click)="close()" class="btn btn-sm">Cancel</button>
         </div>
       </div>
